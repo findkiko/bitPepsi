@@ -1,3 +1,4 @@
+'use strict';
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -37,7 +38,10 @@ module.exports = function(grunt) {
             // files:['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
             files:['Gruntfile.js', 'index.js'],
             options: {
-                globals: {
+                'globalstrict': true,
+                'mocha': true,
+                'node': true,
+                'globals': {
                     jQuery: true,
                     console: true,
                     module: true,
@@ -59,7 +63,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-strip-json-comments');
 
-    grunt.registerTask('test', ['jshint', 'qunit']);
+    grunt.registerTask('test', ['jshint']);
 
     //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
     // grunt.registerTask('default', ['concat', 'uglify']);

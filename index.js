@@ -1,7 +1,7 @@
 'use strict';
 
 var WebSocket = require('ws'); 
-var Config = require('./config/bitpepsi.stripped.json') // JSON configuration file for the application
+var Config = require('./config/bitpepsi.stripped.json'); // JSON configuration file for the application
 //var btcstats = require('btc-stats'); // retired
 var btcprice = require('./lib/btcprice'); // realtime xbt market price in CAD
 var logger = require('winston'); // file and console loggin
@@ -47,16 +47,16 @@ async.each(x, viewWallet, console.error);
 function viewWallet(wallet, done) {
 
     async.auto({
-        wallet: function(done){done(null, wallet)}, // dont understand this
+        wallet: function(done){done(null, wallet);}, // dont understand this
         open: ['wallet', opensocket],
         watch: ['open', watchwallet]
-    }, done)
-};
+    }, done);
+}
 
 // open connection(s)
 function opensocket(done, results) {
 
-    var wallet = results.wallet
+    var wallet = results.wallet;
     // define address
     var req = {type: "address", address:wallet.pubkey, block_chain: "bitcoin"};
     console.log(req);
@@ -77,7 +77,7 @@ function opensocket(done, results) {
     });
     
     // connection errors
-    conn.on('error', done)
+    conn.on('error', done);
 
     // re-connect
     // this is NOT TESTED.
@@ -99,7 +99,7 @@ function watchwallet(done, results) {
         var activity = JSON.parse(data); // parse the websocket reponse
         //console.log(activity);
 
-        if (activity.payload.type == "address" && activity.payload.received != 0){
+        if (activity.payload.type == "address" && activity.payload.received !== 0){
             
             console.log('validating deposit..');
             //done(null, activity)
@@ -107,11 +107,11 @@ function watchwallet(done, results) {
             /*this sections needs to be completed. the parent function conn.on must stay active continuously; the validate/energize functions
             must trigger and close each time conn.on is triggered. */
             async.auto({
-                deposit: function(done){done(null, wallet)},
+                deposit: function(done){done(null, wallet);},
                 validate: ['deposit', validateDeposit],
                 indicate: ['validate', lightOn],
                 energize: ['validate', energize]
-            }, done)            
+            }, done);
 
         } else if (activity.payload.type == "heartbeat") {
             //logger.info("Tick Tock. Current price: $"+currentPrice.val+" CAD. Last updated: " + currentPrice.updated);
@@ -125,10 +125,10 @@ function validateDeposit(done, results) {
 
     var response = {};
     var wallet = results.wallet;
-    var activity = results.watch
+    var activity = results.watch;
 
     if( wallet.pubkey == activity.payload.address ) {
-        if( activity.payload.confirmations != 0 ) {
+        if( activity.payload.confirmations !== 0 ) {
             // this transaction is already confirmed
             done(new Error("Transaction is not new. "+activity.payload.confirmations+" confirmations exist."));
         } else {
@@ -138,14 +138,14 @@ function validateDeposit(done, results) {
             //console.log("price: $%s; received: $%s; expected: $%s; tolerance: $%s",values.usd,values.received,values.expected,wallet.pricetolerance);
 
             if((response.expected - response.received) > wallet.pricetolerance) {
-                done(new Error("Value was not the expected amount. Expected: $" + response.expected + " Received: $" + response.received))
+                done(new Error("Value was not the expected amount. Expected: $" + response.expected + " Received: $" + response.received));
             } else {
                 logger.info("Transaction is VALID.");
                 done(null, wallet);
             }
         }
     } else {
-        done(new Error("Wallet Key and Activity Address do not match."))
+        done(new Error("Wallet Key and Activity Address do not match."));
     }
 }
 
@@ -164,7 +164,7 @@ function energize(done, results) {
            if(err) {
                 // likely what's happened here is that port is still open from a previous session. let's close it and recycle.
                 gpio.close(pin, function(err) { 
-                    done(new Error("We're having trouble closing the port.", err))
+                    done(new Error("We're having trouble closing the port.", err));
                 });
            }
 
@@ -179,7 +179,7 @@ function energize(done, results) {
                             else
                             {
                                 logger.info("Close successful.");
-                                done()
+                                done();
                             }
                         });
                     });
@@ -187,8 +187,7 @@ function energize(done, results) {
                 },duration); // how long in ms do we keep the GPIO 'high'
 
             });
-
-    });
+       });
 }
 
 function lightOn(done, results) {
