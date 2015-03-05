@@ -5,9 +5,8 @@ var Config = require('./config/bitpepsi.stripped.json'); // JSON configuration f
 //var btcstats = require('btc-stats'); // retired
 var btcprice = require('./lib/btcprice'); // realtime xbt market price in CAD
 var logger = require('winston'); // file and console loggin
-var gpio = require('pi-gpio'); // note, you must run this script on a raspberry pi for this to work!
-
 var argv = require('minimist')(process.argv.slice(2));
+if(!argv.n) {var gpio = require('pi-gpio');} // note, you must run this script on a raspberry pi for this to work!
 var async = require('async');
 
 /*
