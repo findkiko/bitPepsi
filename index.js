@@ -188,6 +188,7 @@ function energize(done, results) {
 
             });
        });
+    }
 }
 
 function lightOn(done, results) {
